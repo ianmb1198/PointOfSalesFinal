@@ -5,21 +5,29 @@ public class Controller
 	private Tab tab;
 	private Tab[] tabs;
 	
+	private EOD eodTab;
+	private EOD[] eod;
+	
+	
 	int count;
 	int currentTab;
 	int currentItemIndex;
 	int eodCount;
-	
+	double totalSales;
+
 	Scanner cin = new Scanner(System.in);
 	
 	public Controller()
 	{
 		tabs = new Tab[5];
+		eod = new EOD[100];
 		count = 0;
 		eodCount = 0;
+		totalSales = 0.0;
 		welcomeScreen();
 	}
 
+//--------------------------------------------------------------------------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------------------------------//
 	
 	/**
@@ -27,7 +35,6 @@ public class Controller
 	 */
 	public void welcomeScreen()
 	{
-		Scanner cin = new Scanner(System.in);
 		int choice;
 		do
 		{
@@ -45,17 +52,28 @@ public class Controller
 			{
 				openExistingTab();
 			}
+			else if (choice == 3)
+			{
+				if (tabs[0] == null && tabs[1] == null && tabs[2] == null && tabs[3] == null && tabs[4] == null)
+					printEODreport();
+				else
+				{
+					System.out.println("Error... There are tabs that are still open.");
+				}
+			}
 			else 
 			{
 				System.out.println("Error... Incorrect Input.");
 			}
 			
-		} while (choice != 1 || choice != 2);
+		} while (choice != 1 || choice != 2 || choice != 3);
 	}
+	
+
 	
 	public void beginTab()
 	{
-		Scanner cin = new Scanner(System.in);
+		
 		int input;
 		boolean test;
 		do
@@ -170,10 +188,15 @@ public class Controller
 		for (int i = 0; i < count; i++)
 		{
 			if (tabs[i] != null)
-			{
+			{				
 				//Swap all existing tabs forward in array.
 				if (tabs[i].equals(tabs[currentTabIndex]))
 				{
+					int tabNumber = tabs[i].getTabNumber();
+					double tabTotal = tabs[i].getFoodTotal();
+					eodTab = new EOD(tabNumber, tabTotal);
+					eod[eodCount] = eodTab;
+					eodCount++;
 					
 					tabs[i] = tabs[count - 1];
 					tabs[count - 1] = null;
@@ -182,6 +205,20 @@ public class Controller
 				}
 			}
 		}
+	}
+	
+	public void printEODreport()
+	{
+		
+		System.out.println("***************** EOD ******************");
+		for (int i = 0; i < eodCount; i++)
+		{
+			System.out.println((i + 1) + ". " + eod[i].toString());
+			totalSales = totalSales + eod[i].getTabTotal();
+		}
+		System.out.println("\nTotal Sales: $" + totalSales);
+		System.out.println("****************************************");
+		System.exit(0);
 	}
 
 	public void tabWriter(String item, double price, int currentTabIndex, String[] arr)

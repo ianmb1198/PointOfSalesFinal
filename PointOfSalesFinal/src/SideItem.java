@@ -5,7 +5,6 @@ public class SideItem
 	
 	public SideItem(String item, double price) 
 	{
-
 		this.item = item;
 		this.price = price;
 	}
