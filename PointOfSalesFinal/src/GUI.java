@@ -182,6 +182,7 @@ public class GUI extends JFrame implements ActionListener
 		else
 		{	
 			enterMenuItem(tabs[counter], (String) combobox.getSelectedItem());
+			combobox.setSelectedIndex(0);
 		}	
 	}
 	private void enterMenuItem(Tab tab, String item)
@@ -348,7 +349,7 @@ public class GUI extends JFrame implements ActionListener
 	private void setEODWindow()
 	{
 		setSize(350, 500);
-		tabInfo.setText(eodReport + "\nTotal for the day: " + f.format(eodTotal));
+		tabInfo.setText(eodReport + "\nTotal Sales: $" + f.format(eodTotal));
 		add(scrollPane, BorderLayout.CENTER);
 		add(backButton, BorderLayout.WEST);
 		currentWindow = "eod";
@@ -666,7 +667,7 @@ public class GUI extends JFrame implements ActionListener
 				
 				if (doesTabExist(tabNum))
 				{
-					numberField.setText("Tab already exists");
+					JOptionPane.showMessageDialog(null, "Tab already exists.");
 					mustBeCleared = true;
 				}
 				
@@ -966,7 +967,6 @@ public class GUI extends JFrame implements ActionListener
 				unSetExistingWindow();
 				setExistingWindow();
 			}
-			
 		}
 		
 		if (callingBtn.equalsIgnoreCase("pay tab"))
