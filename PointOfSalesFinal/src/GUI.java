@@ -173,7 +173,8 @@ public class GUI extends JFrame implements ActionListener
 	{
 		if(!isEmpty(deletedTabs))
 		{
-			enterMenuItem(tabs[getSmallestElement(deletedTabs)], (String) combobox.getSelectedItem());
+			enterMenuItem(tabs[getSmallestElement(deletedTabs)], (String) combobox.getSelectedItem(), combobox);
+			combobox.setSelectedIndex(0);
 		}
 		else if (combobox.getSelectedItem().equals(""))
 		{
@@ -181,11 +182,11 @@ public class GUI extends JFrame implements ActionListener
 		}
 		else
 		{	
-			enterMenuItem(tabs[counter], (String) combobox.getSelectedItem());
+			enterMenuItem(tabs[counter], (String) combobox.getSelectedItem(), combobox);
 			combobox.setSelectedIndex(0);
 		}	
 	}
-	private void enterMenuItem(Tab tab, String item)
+	private void enterMenuItem(Tab tab, String item, JComboBox combobox)
 	{
 		if (item.equals(""))
 		{
@@ -198,6 +199,7 @@ public class GUI extends JFrame implements ActionListener
 			double itemPrice = Double.parseDouble(itemParts[1]);
 			tab.addItem(itemName, itemPrice);
 			tabInfo.setText(tab.toString());
+			combobox.setSelectedIndex(0);
 		}
 	}
 	private int getSmallestElement(int[] array)
@@ -620,7 +622,8 @@ public class GUI extends JFrame implements ActionListener
 		if (callingBtn.equalsIgnoreCase("eod report"))
 		{
 			unSetOpeningWindow();
-			setEODWindow();
+			setEODWindow();	
+	
 		}
 		
 	//*****ENTER TAB NUMBER WINDOW ACTIONS*****\\
@@ -792,7 +795,7 @@ public class GUI extends JFrame implements ActionListener
 				}
 				case "tabEdit":
 				{
-					enterMenuItem(tempTab, (String) appMenu.getSelectedItem());
+					enterMenuItem(tempTab, (String) appMenu.getSelectedItem(), appMenu);
 					break;
 				}	
 			}	
@@ -810,7 +813,7 @@ public class GUI extends JFrame implements ActionListener
 				
 				case "tabEdit":
 				{	
-					enterMenuItem(tempTab, (String) saladMenu.getSelectedItem());
+					enterMenuItem(tempTab, (String) saladMenu.getSelectedItem(), saladMenu);
 					break;
 				}
 			}
@@ -828,7 +831,7 @@ public class GUI extends JFrame implements ActionListener
 				}
 				case "tabEdit":
 				{	
-					enterMenuItem(tempTab, (String) sandwichMenu.getSelectedItem());
+					enterMenuItem(tempTab, (String) sandwichMenu.getSelectedItem(), sandwichMenu);
 					break;
 				}	
 			}	
@@ -845,7 +848,7 @@ public class GUI extends JFrame implements ActionListener
 				}
 				case "tabEdit":
 				{	
-					enterMenuItem(tempTab, (String) flatbreadMenu.getSelectedItem());
+					enterMenuItem(tempTab, (String) flatbreadMenu.getSelectedItem(), flatbreadMenu);
 					break;
 				}	
 			}	
@@ -863,7 +866,7 @@ public class GUI extends JFrame implements ActionListener
 				
 				case "tabEdit":
 				{	
-					enterMenuItem(tempTab, (String) tacoSkilletMenu.getSelectedItem());
+					enterMenuItem(tempTab, (String) tacoSkilletMenu.getSelectedItem(), tacoSkilletMenu);
 					break;
 				}	
 			}	
@@ -881,7 +884,7 @@ public class GUI extends JFrame implements ActionListener
 				
 				case "tabEdit":
 				{	
-					enterMenuItem(tempTab, (String) beverageMenu.getSelectedItem());
+					enterMenuItem(tempTab, (String) beverageMenu.getSelectedItem(), beverageMenu);
 					break;
 				}	
 			}	
@@ -995,8 +998,7 @@ public class GUI extends JFrame implements ActionListener
 				tabs[tabIndex] = null;
 				unSetExistingWindow();
 				setExistingWindow();
-			}
-			
+			}			
 		}
    	}
 	
