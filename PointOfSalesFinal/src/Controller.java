@@ -1,33 +1,25 @@
 import java.util.Scanner;
 
-public class Controller 
+public class Controller
 {
 	private Tab tab;
 	private Tab[] tabs;
-	
-	private EOD eodTab;
-	private EOD[] eod;
-	
 	
 	int count;
 	int currentTab;
 	int currentItemIndex;
 	int eodCount;
-	double totalSales;
-
+	
 	Scanner cin = new Scanner(System.in);
 	
 	public Controller()
 	{
 		tabs = new Tab[5];
-		eod = new EOD[100];
 		count = 0;
 		eodCount = 0;
-		totalSales = 0.0;
-		welcomeScreen();
+		//welcomeScreen();
 	}
 
-//--------------------------------------------------------------------------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------------------------------//
 	
 	/**
@@ -35,6 +27,7 @@ public class Controller
 	 */
 	public void welcomeScreen()
 	{
+		Scanner cin = new Scanner(System.in);
 		int choice;
 		do
 		{
@@ -52,28 +45,17 @@ public class Controller
 			{
 				openExistingTab();
 			}
-			else if (choice == 3)
-			{
-				if (tabs[0] == null && tabs[1] == null && tabs[2] == null && tabs[3] == null && tabs[4] == null)
-					printEODreport();
-				else
-				{
-					System.out.println("Error... There are tabs that are still open.");
-				}
-			}
 			else 
 			{
 				System.out.println("Error... Incorrect Input.");
 			}
 			
-		} while (choice != 1 || choice != 2 || choice != 3);
+		} while (choice != 1 || choice != 2);
 	}
-	
-
 	
 	public void beginTab()
 	{
-		
+		Scanner cin = new Scanner(System.in);
 		int input;
 		boolean test;
 		do
@@ -96,6 +78,26 @@ public class Controller
 		count++;
 		System.out.println();
 		menuDisplay(count - 1);
+	}
+
+	public void beginTab(int input)
+	{
+		boolean test;
+		do
+		{
+			test = doesTabExist(input);
+			if (test == true)
+			{
+				System.out.println("\nERROR: Tab number already exists...\n");
+				continue;
+			}
+			else
+				break;
+			
+		} while (test == true);
+
+		tabs[count] = new Tab(input);
+		count++;
 	}
 	
 	public void openExistingTab()
@@ -188,15 +190,10 @@ public class Controller
 		for (int i = 0; i < count; i++)
 		{
 			if (tabs[i] != null)
-			{				
+			{
 				//Swap all existing tabs forward in array.
 				if (tabs[i].equals(tabs[currentTabIndex]))
 				{
-					int tabNumber = tabs[i].getTabNumber();
-					double tabTotal = tabs[i].getFoodTotal();
-					eodTab = new EOD(tabNumber, tabTotal);
-					eod[eodCount] = eodTab;
-					eodCount++;
 					
 					tabs[i] = tabs[count - 1];
 					tabs[count - 1] = null;
@@ -206,26 +203,12 @@ public class Controller
 			}
 		}
 	}
-	
-	public void printEODreport()
-	{
-		
-		System.out.println("***************** EOD ******************");
-		for (int i = 0; i < eodCount; i++)
-		{
-			System.out.println((i + 1) + ". " + eod[i].toString());
-			totalSales = totalSales + eod[i].getTabTotal();
-		}
-		System.out.println("\nTotal Sales: $" + totalSales);
-		System.out.println("****************************************");
-		System.exit(0);
-	}
 
 	public void tabWriter(String item, double price, int currentTabIndex, String[] arr)
 	{
 		tabs[currentTabIndex].addItem(item, price);
 		tabDisplay(currentTabIndex);
-		itemCustomizeCaller(arr, currentTabIndex);	
+			
 	}
 	
 	public void itemRemover(int currentTabIndex)
@@ -266,8 +249,8 @@ public class Controller
 	{
 		cin.close();
 	}
-//--------------------------------------------------------------------------------------------------------------------------//
-//--------------------------------------------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------------------------------------------//	
+	
 	/**
 	 * Main Menu and Menu Categories Portion
 	 */
@@ -300,7 +283,7 @@ public class Controller
 			"Buffalo Chx Salad,12.09",
 			"Sthwst Taco Salad,12.64",
 			"House Combo Salad,10.99" };
-	private String[] Sandwhiches = { "Billy Philly Sw,12.63",
+	private String[] Sandwiches = { "Billy Philly Sw,12.63",
 			   "Blazing Brisk Sw,11.49",
 			   "Roadhouse Sw,13.19",
 			   "8HourPullPork Sw,10.99",
@@ -341,7 +324,7 @@ public class Controller
 			   "Kids Mac,6.89",
 			   "Kids Chx Tenders,6.89",
 			   "Kids Mini Chz Brgr,6.89" };
-	private String[] NABeverages = { "Water,0.00",
+	private String[] Beverages = { "Water,0.00",
 				"Pepsi,1.50",
 				"Diet Pepsi,1.50",
 				"Sierra Mist,1.50",
@@ -350,6 +333,50 @@ public class Controller
 				"Iced Tea,1.50",
 				"Brisk,1.50"};
 	
+	public String[] getApp()
+	{
+		return Appetizers;
+	}
+	
+	public String[] getGarden()
+	{
+		return Garden;
+	}
+	
+	public String[] getSandwiches()
+	{
+		return Sandwiches;
+	}
+	
+	public String[] getFlatreads()
+	{
+		return Flatbreads;
+	}
+	
+	public String[] getTacoSkillet()
+	{
+		return Tacos;
+	}
+	
+	public String[] getBeverage()
+	{
+		return Beverages;
+	}
+	
+	public int getCount()
+	{
+		return count;
+	}
+	
+	/*public Tab getTab(int tabIndex)
+	{
+		return tabs[tabIndex];
+	}*/
+	
+	public String toString(int tabIndex)
+	{
+		return tabs[tabIndex].toString();
+	}
 	
 	public void openCategory(int choice, int currentTabIndex)
 	{
@@ -378,7 +405,7 @@ public class Controller
 			do 
 			{
 				System.out.println("************** SANDWHICHES *************");
-				itemNum = menuWriter(Sandwhiches, currentTabIndex);	
+				itemNum = menuWriter(Sandwiches, currentTabIndex);	
 			} while(itemNum != 0);
 			tabDisplay(currentTabIndex);
 			menuDisplay(currentTabIndex);
@@ -450,7 +477,7 @@ public class Controller
 			do 
 			{
 				System.out.println("************* NA BEVERAGES *************");
-				itemNum = menuWriter(NABeverages, currentTabIndex);
+				itemNum = menuWriter(Beverages, currentTabIndex);
 			} while(itemNum != 0);
 			tabDisplay(currentTabIndex);
 			menuDisplay(currentTabIndex);
@@ -510,128 +537,4 @@ public class Controller
 	}
 
 
-//--------------------------------------------------------------------------------------------------------------------------//
-//--------------------------------------------------------------------------------------------------------------------------//
-	
-	/**
-	 * SIDE MENU PORTION
-	 */
-	private String[] BurgerGarnish = { "Lettuce,0.00",
-			"Red Onion,0.00",
-			"Tomato,0.00",
-			"Jalepenos,0.99",
-			"Mushrooms,0.99",
-			"LTO,0.00"};
-	private String[] MealSides = { "Fries,0.00",
-			"No Side,0.00",
-			"Waffle Fries,1.99",
-			"SW Fries,1.99",
-			"Cheese Curds,2.99",
-			"Nachos,2.99" };
-	
-	public void itemCustomizeCaller(String[] arr, int currentTabIndex)
-	{
-		if (arr.equals(Burgers))
-		{
-			System.out.println("************** CONDIMENTS **************");
-			itemCustomizer(BurgerGarnish, currentTabIndex);
-			System.out.println("**************** SIDES *****************");
-			itemCustomizer(MealSides, currentTabIndex);			
-			tabDisplay(currentTabIndex);
-			System.out.println("*************** DRINKS *****************");
-			itemCustomizer(NABeverages, currentTabIndex);
-			tabDisplay(currentTabIndex);
-		}
-	}
-
-	public void itemCustomizer(String[] arr, int currentTabIndex)
-	{
-		int choice;
-		
-		do
-		{
-			choice = sideMenuWriter(arr, currentTabIndex);
-			if (choice == -1)
-			{
-				sideItemRemover(currentTabIndex);
-			}
-		} while (choice != -2);
-
-	}
-	
-	public int sideMenuWriter(String[] arr, int currentTabIndex)
-	{
-		int itemNum;
-		int length = arr.length;
-		String[] items = new String[length];
-		double[] prices = new double[length];
-		
-		
-		for (int i = 0; i < length; i++)
-		{
-			String info = arr[i];
-			String[] strSplit = info.split(",");
-			items[i] = strSplit[0];
-			prices[i] = Double.parseDouble(strSplit[1]);
-		}
-		for (int i = 0; i < length; i++)
-		{
-			System.out.println((i+1) + ". " + items[i]);
-		}
-		
-		System.out.println("\n-1. Edit\n-2. Next\n****************************************");
-		System.out.print("--> ");
-		itemNum = cin.nextInt();
-		cin.nextLine();
-		System.out.println();
-		if (itemNum !=-1 && itemNum != -2 && itemNum <= length)
-		{
-			sideTabWriter(items[itemNum - 1], prices[itemNum - 1], currentTabIndex, arr);
-			return itemNum;
-		}
-		else if (itemNum == -1)
-		{
-			return itemNum;
-		}
-		else if (itemNum == -2)
-		{
-			return itemNum;
-		}
-		else if (itemNum > length || itemNum < -2)
-		{
-			System.out.println("\nERROR: Either input was invalid or item does not exist...\n");
-			return itemNum;
-		}
-		else
-			return itemNum;
-	}
-	
-	public void sideTabWriter(String item, double price, int currentTabIndex, String[] arr)
-	{
-		currentItemIndex = tabs[currentTabIndex].getCount() - 1;
-		tabs[currentTabIndex].addSideToItem(item, price, currentItemIndex);
-		tabDisplay(currentTabIndex);
-	}
-	
-	public void sideItemRemover(int currentTabIndex)
-	{
-
-		boolean itemRemoved;
-		tabDisplay(currentTabIndex);
-		System.out.print("Which item do you need voided?\n--> ");
-		String choice = cin.nextLine();
-		tab = tabs[currentTabIndex];
-		currentItemIndex = tabs[currentTabIndex].getCount() - 1;
-		itemRemoved = tab.removeSideItem(choice, currentItemIndex);
-		
-		if (itemRemoved == true)
-		{
-			System.out.println("Item successfully removed.");
-		}
-		else
-		{
-			System.out.println("Item doesn't exist.");
-		}
-		
-	}
 }
