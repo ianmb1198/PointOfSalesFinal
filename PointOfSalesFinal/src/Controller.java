@@ -8,7 +8,7 @@ public class Controller
 	private EOD eodTab;
 	private EOD[] eod;
 	
-	
+	int no;
 	int count;
 	int currentTab;
 	int currentItemIndex;
