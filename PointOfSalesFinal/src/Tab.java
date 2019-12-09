@@ -1,3 +1,6 @@
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 public class Tab 
 {
 	private Item[] items;
@@ -7,7 +10,8 @@ public class Tab
 	private int tabNumber;
 	int count;
 	int currentItem;
-	
+
+	private NumberFormat f = new DecimalFormat("#0.00");
 	double foodTotal;
 	
 	public Tab()
@@ -54,7 +58,6 @@ public class Tab
 				if (items[i].equals(items[itemIndex - 1]))
 				{
 					foodTotal = foodTotal - items[i].getPrice();
-					foodTotal = foodTotal - items[i].getSidePriceTotal();
 					items[i] = items[count - 1];
 					items[count - 1] = null;
 					count--;
@@ -64,9 +67,6 @@ public class Tab
 		}
 		return false;
 	}
-	
-	
-
 	
 	public int getTabNumber() {
 		return tabNumber;
@@ -84,6 +84,10 @@ public class Tab
 	public double getFoodTotal()
 	{
 		return foodTotal;
+	}
+	public void setFoodTotal(double foodTotal)
+	{
+		this.foodTotal = foodTotal;
 	}
 	
 	public Item getItem(int itemIndex)
@@ -130,9 +134,8 @@ public class Tab
 		for (int i = 0; i < count; i++)
 		{
 			information += ((i+1) + ". " + items[i].toString() + "\n");
-			
 		}
-		information += ("\nTotal: $" + getFoodTotal());
+		information += ("\nTotal: $" + f.format(getFoodTotal()));
 
 		return information;
 	}

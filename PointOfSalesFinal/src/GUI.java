@@ -5,6 +5,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class GUI extends JFrame implements ActionListener
 {	
@@ -12,13 +14,15 @@ public class GUI extends JFrame implements ActionListener
 	private Tab[] tabs = new Tab[16];
 	private Tab tempTab = new Tab();
 	private String eodReport = "";
-	private double eodTotal = 0;
+	private double eodTotal = 0.00;
 	private String currentWindow; /* Possible window titles: opening, number, 
 	   							   *menu, existing, tabEdit, eod. */
 	private int counter;
 	private int tabNumTracker;
 	private int[] deletedTabs = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}; 
 	private boolean tabControlsOpen = false;
+	
+	private NumberFormat f = new DecimalFormat("#0.00");
 	
 	public GUI(String title)
 	{
@@ -40,18 +44,12 @@ public class GUI extends JFrame implements ActionListener
 	private JPanel emptyPanel2 = new JPanel();
 	private JPanel modularPanel = new JPanel();
 	
-	
-	
-	
 //******ELEMENTS THAT ARE USED IN THE OPENING WINDOW*****\\
 	private JButton beginButton = new JButton("Begin new tab");
 	private JButton viewButton = new JButton("View existing tabs");
 	private JButton eodButton = new JButton("EOD Report");
 	
 	private JPanel openingPanel = new JPanel(new GridLayout(3, 1));
-	
-	
-	
 	
 //*****ELEMENTS THAT ARE USED IN THE WINDOW FOR ENTERING THE TAB NUMBER*****\\
 	private JButton enterNumButton = new JButton("Enter");
@@ -72,9 +70,6 @@ public class GUI extends JFrame implements ActionListener
 	
 	private JTextArea numberField = new JTextArea("", 5, 7 );
 	
-	
-	
-	
 //*****ELEMNETS THAT ARE USED IN THE MENU AND EDIT WINDOW*****\\
 	private JLabel appLabel = new JLabel("Appetizers");
 	private JLabel saladLabel = new JLabel("Salads");
@@ -87,10 +82,15 @@ public class GUI extends JFrame implements ActionListener
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JComboBox appMenu = new JComboBox(cont.getApp());
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JComboBox saladMenu = new JComboBox(cont.getGarden());
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JComboBox sandwichMenu = new JComboBox(cont.getSandwiches());
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JComboBox flatbreadMenu = new JComboBox(cont.getFlatreads());
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JComboBox tacoSkilletMenu = new JComboBox(cont.getTacoSkillet());
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JComboBox beverageMenu = new JComboBox(cont.getBeverage());
 	
 	private JButton appButton = new JButton("Enter Appetizer");
@@ -169,13 +169,35 @@ public class GUI extends JFrame implements ActionListener
 		}
 			
 	}
+	private void enterAnItem(@SuppressWarnings("rawtypes") JComboBox combobox)
+	{
+		if(!isEmpty(deletedTabs))
+		{
+			enterMenuItem(tabs[getSmallestElement(deletedTabs)], (String) combobox.getSelectedItem());
+		}
+		else if (combobox.getSelectedItem().equals(""))
+		{
+			JOptionPane.showMessageDialog(combobox, "Choose an item from the list.");
+		}
+		else
+		{	
+			enterMenuItem(tabs[counter], (String) combobox.getSelectedItem());
+		}	
+	}
 	private void enterMenuItem(Tab tab, String item)
 	{
-		String[] itemParts = item.split(",");
-		String itemName = itemParts[0];
-		double itemPrice = Double.parseDouble(itemParts[1]);
-		tab.addItem(itemName, itemPrice);
-		tabInfo.setText(tab.toString());
+		if (item.equals(""))
+		{
+			JOptionPane.showMessageDialog(null, "Choose an item from the list.");
+		}
+		else
+		{
+			String[] itemParts = item.split(",");
+			String itemName = itemParts[0];
+			double itemPrice = Double.parseDouble(itemParts[1]);
+			tab.addItem(itemName, itemPrice);
+			tabInfo.setText(tab.toString());
+		}
 	}
 	private int getSmallestElement(int[] array)
 	{
@@ -194,7 +216,7 @@ public class GUI extends JFrame implements ActionListener
 		int smallest = 17; //17 because with how and when this function is used, no value will ever be over 17
 		for (int i = 0; i < array.length; i++ )
 		{	
-			if (-1< array[i] && array[i] < smallest)
+			if (-1 < array[i] && array[i] < smallest)
 			{
 				smallest = array[i];
 			}
@@ -235,11 +257,13 @@ public class GUI extends JFrame implements ActionListener
 		
 		return true;
 	}
+
+	
 	
 //*****SETTER FOR PRIMARY WINDOW*****\\
 	private void setOpeningWindow()
 	{
-		setSize(250, 320);
+		setSize(500, 400);
 		openingPanel.add(beginButton);
 		openingPanel.add(viewButton);
 		openingPanel.add(eodButton);
@@ -271,7 +295,6 @@ public class GUI extends JFrame implements ActionListener
 				tabButtons[i].setBackground(Color.red);
 				tabButtons[i].setText("Empty");
 			}
-			
 			else if (tabs[i] != null)
 			{
 				tabButtons[i].setOpaque(true);
@@ -291,7 +314,6 @@ public class GUI extends JFrame implements ActionListener
 		remove(tabPanel);
 		remove(backButton);
 	}
-	
 	
 	private void setNumberWindow()
 	{
@@ -323,11 +345,10 @@ public class GUI extends JFrame implements ActionListener
 		numberField.setText("");
 	}
 	
-	
 	private void setEODWindow()
 	{
 		setSize(350, 500);
-		tabInfo.setText(eodReport + "\nTotal for the day: " + String.valueOf(eodTotal));
+		tabInfo.setText(eodReport + "\nTotal for the day: " + f.format(eodTotal));
 		add(scrollPane, BorderLayout.CENTER);
 		add(backButton, BorderLayout.WEST);
 		currentWindow = "eod";
@@ -452,12 +473,12 @@ public class GUI extends JFrame implements ActionListener
 		removeTxtField.setText("");
 	}
 
-//*****FUNCTIONS FOR SUB WINDOWS	
+//*****METHODS FOR SUB WINDOWS	
 	private void addTabControls(Tab tab)
 		{
 			setSize(650, 460);
 			tabNumberLabel.setText("Tab: " + tab.getTabNumber());
-			tabTotalLabel.setText("Total: $" + tab.getFoodTotal());
+			tabTotalLabel.setText("Total: $" + f.format(tab.getFoodTotal()));
 			tabNumberAndTotalLabelPanel.add(tabNumberLabel);
 			tabNumberAndTotalLabelPanel.add(tabTotalLabel);
 			tabControls.add(tabNumberAndTotalLabelPanel);
@@ -473,7 +494,7 @@ public class GUI extends JFrame implements ActionListener
 			remove(tabControls);
 			tabControlsOpen = true;
 		}
-
+	
 //*****ACTION LISTENERS*****\\
 	private void setActionListener() 
 	{
@@ -618,7 +639,6 @@ public class GUI extends JFrame implements ActionListener
 			if (numberField.getText().equalsIgnoreCase(""))
 			{
 			}
-			
 			else
 			{	
 				numberField.setText(numberField.getText().substring(0, numberField.getText().length() - 1));
@@ -632,16 +652,18 @@ public class GUI extends JFrame implements ActionListener
 			
 		if (callingBtn.equalsIgnoreCase("enter"))
 		{	
-			int tabNum = Integer.parseInt(numberField.getText());
+			int tabNum;
 			
 			if (numberField.getText().equalsIgnoreCase(""))
 			{
-				numberField.setText("Must input a tab number");
+				JOptionPane.showMessageDialog(null, "Must input a tab number.");
 				mustBeCleared = true;
 			}
 				
 			else
 			{	
+				tabNum = Integer.parseInt(numberField.getText());
+				
 				if (doesTabExist(tabNum))
 				{
 					numberField.setText("Tab already exists");
@@ -740,6 +762,7 @@ public class GUI extends JFrame implements ActionListener
 					{
 						tabs[counter].removeItem(i);
 					}
+					tabs[counter].setFoodTotal(0.00);
 					tabInfo.setText(tabs[counter].toString());
 					break;
 				}
@@ -750,6 +773,7 @@ public class GUI extends JFrame implements ActionListener
 					{
 						tempTab.removeItem(i);
 					}
+					tabs[counter].setFoodTotal(0.00);
 					tabInfo.setText(tempTab.toString());
 					break;
 				}
@@ -762,18 +786,9 @@ public class GUI extends JFrame implements ActionListener
 			{
 				case "menu":
 				{	
-					if(!isEmpty(deletedTabs))
-					{
-						enterMenuItem(tabs[getSmallestElement(deletedTabs)], (String) appMenu.getSelectedItem());
-					}
-				
-					else
-					{	
-						enterMenuItem(tabs[counter], (String) appMenu.getSelectedItem());
-					}	
+					enterAnItem(appMenu);
 					break;
 				}
-				
 				case "tabEdit":
 				{
 					enterMenuItem(tempTab, (String) appMenu.getSelectedItem());
@@ -788,15 +803,7 @@ public class GUI extends JFrame implements ActionListener
 			{
 				case "menu":
 				{	
-					if(!isEmpty(deletedTabs))
-					{
-						enterMenuItem(tabs[getSmallestElement(deletedTabs)], (String) saladMenu.getSelectedItem());
-					}
-				
-					else
-					{	
-						enterMenuItem(tabs[counter], (String) saladMenu.getSelectedItem());
-					}	
+					enterAnItem(saladMenu);
 					break;
 				}
 				
@@ -814,18 +821,10 @@ public class GUI extends JFrame implements ActionListener
 			{
 				case "menu":
 				{	
-					if(!isEmpty(deletedTabs))
-					{
-						enterMenuItem(tabs[getSmallestElement(deletedTabs)], (String) sandwichMenu.getSelectedItem());
-					}
-				
-					else
-					{	
-						enterMenuItem(tabs[counter], (String) sandwichMenu.getSelectedItem());
-					}	
+					
+					enterAnItem(sandwichMenu);
 					break;
 				}
-				
 				case "tabEdit":
 				{	
 					enterMenuItem(tempTab, (String) sandwichMenu.getSelectedItem());
@@ -840,18 +839,9 @@ public class GUI extends JFrame implements ActionListener
 			{
 				case "menu":
 				{	
-					if(!isEmpty(deletedTabs))
-					{
-						enterMenuItem(tabs[getSmallestElement(deletedTabs)], (String) flatbreadMenu.getSelectedItem());
-					}
-				
-					else
-					{	
-						enterMenuItem(tabs[counter], (String) flatbreadMenu.getSelectedItem());
-					}	
+					enterAnItem(flatbreadMenu);
 					break;
 				}
-				
 				case "tabEdit":
 				{	
 					enterMenuItem(tempTab, (String) flatbreadMenu.getSelectedItem());
@@ -866,15 +856,7 @@ public class GUI extends JFrame implements ActionListener
 			{
 				case "menu":
 				{	
-					if(!isEmpty(deletedTabs))
-					{
-						enterMenuItem(tabs[getSmallestElement(deletedTabs)], (String) tacoSkilletMenu.getSelectedItem());
-					}
-				
-					else
-					{	
-						enterMenuItem(tabs[counter], (String) tacoSkilletMenu.getSelectedItem());
-					}	
+					enterAnItem(tacoSkilletMenu);
 					break;
 				}
 				
@@ -892,15 +874,7 @@ public class GUI extends JFrame implements ActionListener
 			{
 				case "menu":
 				{	
-					if(!isEmpty(deletedTabs))
-					{
-						enterMenuItem(tabs[getSmallestElement(deletedTabs)], (String) beverageMenu.getSelectedItem());
-					}
-				
-					else
-					{	
-						enterMenuItem(tabs[counter], (String) beverageMenu.getSelectedItem());
-					}	
+					enterAnItem(beverageMenu);
 					break;
 				}
 				
@@ -1024,5 +998,7 @@ public class GUI extends JFrame implements ActionListener
 			}
 			
 		}
-   	}	
+   	}
+	
+
 }
