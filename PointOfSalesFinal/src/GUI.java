@@ -674,11 +674,7 @@ public class GUI extends JFrame implements ActionListener
 					mustBeCleared = true;
 				}
 				
-				else if (counter == 16)
-				{
-					numberField.setText("Restaurant is full");
-					mustBeCleared = true;
-				}
+				
 				
 				else
 				{
@@ -688,7 +684,11 @@ public class GUI extends JFrame implements ActionListener
 						unSetNumberWindow();
 						setMenuWindow(getSmallestElement(deletedTabs));
 					}
-					
+					else if (counter == 16)
+					{
+						numberField.setText("Restaurant is full");
+						mustBeCleared = true;
+					}
 					else
 					{	
 						tabs[counter] = new Tab(tabNum);
