@@ -120,9 +120,7 @@ public class GUI extends JFrame implements ActionListener
 	
 	private JTextArea tabInfo = new JTextArea(30, 17);
 	private JScrollPane scrollPane = new JScrollPane(tabInfo);
-	
-	
-	
+
 //*****ELEMENTS THAT ARE USED IN THE EXISTING TABS WINDOW***\\\
 	private JButton[] tabButtons = new JButton[16];
 	private JPanel tabPanel = new JPanel(new GridLayout(4, 4));
@@ -137,13 +135,6 @@ public class GUI extends JFrame implements ActionListener
 	
 	private JPanel tabControls = new JPanel(new GridLayout(4, 1));
 	private JPanel tabNumberAndTotalLabelPanel = new JPanel(new GridLayout(2, 1));
-
-	
-
-//*****ELEMENTS USED IN THE EOD WINDOW*****\\	
-	/*all elements in the EOD window 
-	  are also used somewhere else*/
-	
 	
 //*****FUNCTIONS*****\\
 	private boolean doesTabExist(int tabNum)
